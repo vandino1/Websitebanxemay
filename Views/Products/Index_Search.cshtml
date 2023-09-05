@@ -1,0 +1,245 @@
+﻿@model IEnumerable<websitebanxemay.Models.Product>
+
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm sản phẩm";
+    <style>
+        .product-count {
+            color: black;
+            padding: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+    </style>
+}
+<span id="Message_create" class="d-none">@TempData["Message_create"]</span>
+<span id="Message_edit" class="d-none">@TempData["Message_edit"]</span>
+<span id="Message_delete" class="d-none">@TempData["Message_delete"]</span>
+<span id="Message_error" class="d-none">@TempData["Message_error"]</span>
+<div class="col-sm-12">
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
+    </ol>
+</div>
+<form asp-controller="Products" asp-action="Filter" method="get">
+    <label>Phạm vi giá:</label>
+    <input type="number" name="minPrice" placeholder="Giá tối thiểu">
+    <input type="number" name="maxPrice" placeholder="Giá tối đa">
+    <button type="submit">Lọc dữ liệu</button>
+</form>
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Tạo mới</a>
+</p>
+<hr />
+<form asp-controller="Products" asp-action="Index_Search" method="get">
+    <p>
+        Nhập nội dung: <input type="text" name="SearchString" placeholder="Tên, thương hiệu, danh mục..." value="@ViewData["CurrentFilter"]" style="width:300px" required />
+        <button class="btn btn-primary text-light" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button> |
+        <a asp-action="Index" class="btn btn-warning text-dark"><i class="bi bi-arrow-counterclockwise"></i>Tất cả sản phẩm</a> |
+        <a href="@Url.Action("ExportToExcel")" class="btn btn-success"><i class="bi bi-file-excel"></i> Xuất Excel</a>
+</form>
+<form asp-controller="Products" asp-action="DeleteMultiple" method="post">
+    <button type="submit" class="btn btn-danger"><i class="bi bi-x-octagon"></i> Xóa tất cả</button>
+    <hr />
+    <table class="table table-bordered table-hover text-center">
+        <thead>
+            <tr class="bg-info">
+                <th><input type="checkbox" id="checkAll" /></th>
+                <th>STT</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Brand)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Desciption)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.viewCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Color)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Capacity)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.MaxWattage)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MaxMoment)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.Warranty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.adverageRating)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Image)
+                </th>
+                <th>Sửa</th>
+                <th>Chi tiết</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count() > 0)
+            {
+                int i = 1;
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><input class="checkbox" type="checkbox" name="selectedIds" value="@item.ProductId" /></td>
+                        <td>@i</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Brand)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.Desciption)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.viewCount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Color)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Capacity)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.MaxWattage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaxMoment)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Warranty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.adverageRating)
+                        </td>
+                        <td>
+                            <img src="~/images/@Html.DisplayFor(modelItem => item.Image)" width="100" />
+                        </td>
+                        <td class="col-auto">
+                            <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td class="col-auto">
+                            <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-info btn-sm"><i class="bi bi-sliders"></i></a>
+                        </td>
+                       
+                    </tr>
+                    i++;
+
+                }
+            }
+        </tbody>
+    </table>
+</form>
+
+<div class="product-count">
+    <p>Tổng số bản ghi: @Model.Count()</p>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var message = $('#Message_create').text();
+            if (message !== '') {
+                toastr.success(message);
+            }
+
+        });
+        $(document).ready(function () {
+            var message = $('#Message_edit').text();
+            if (message !== '') {
+                toastr.info(message);
+            }
+
+        });
+        $(document).ready(function () {
+            var message = $('#Message_delete').text();
+            if (message !== '') {
+                toastr.warning(message);
+            }
+
+        });
+        $(document).ready(function () {
+            var message = $('#Message_error').text();
+            if (message !== '') {
+                toastr.error(message);
+            }
+
+        });
+
+        $(document).ready(function () {
+            $('#checkAll').click(function () {
+                $('.checkbox').prop('checked', $(this).prop('checked'));
+            });
+        });
+
+
+        $(document).ready(function () {
+            // Lắng nghe sự kiện submit form
+            $('#filter-form').submit(function (e) {
+                // Ngăn chặn hành động mặc định của form
+                e.preventDefault();
+
+                // Lấy giá trị của khoảng giá trị được chọn
+                var minPrice = $('input[name="minPrice"]').val();
+                var maxPrice = $('input[name="maxPrice"]').val();
+
+                // Gửi AJAX request để lọc các mục theo khoảng giá trị
+                $.ajax({
+                    url: '/items/filter',
+                    method: 'POST',
+                    data: {
+                        minPrice: minPrice,
+                        maxPrice: maxPrice
+                    },
+                    success: function (response) {
+                        // Cập nhật danh sách mục với kết quả trả về từ server
+                        $('#item-list').html(response);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+

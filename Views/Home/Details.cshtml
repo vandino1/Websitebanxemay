@@ -1,0 +1,535 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@model websitebanxemay.Models.Product
+
+@{
+    ViewData["Title"] = "Chi tiết tin quảng cáo";
+    <style>
+        p.special{
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        h2.most {
+            color: green;
+        }
+
+        .zoom {
+            padding: 1px;
+            background-color: white;
+            transition: transform .2s; /* Animation */
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+            .zoom:hover {
+                transform: scale(1.15); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+            }
+
+        h5.title:hover {
+            color: #288ad6;
+        }
+
+        h5.detail {
+            border-bottom: 2px solid green;
+            width: 170px;
+        }
+
+        span.tag {
+            border-bottom: 2px solid green;
+            width: 70px;
+            font-weight: bold;
+            float: left;
+        }
+
+        a.item-tag {
+            position: relative;
+            /*background: #F2F5F8;*/
+            background: #ecdcdc;
+            color: #9B9B9B;
+            border-radius: 3px;
+        }
+        /* CSS */
+        /*.post .post-content {
+            display: none;
+        }
+
+        .post.show-all .post-content {
+            display: block;
+        }
+
+        .post .show-more {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #fff;
+            color: #007bff;
+            font-size: 15px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            text-decoration: none;
+            border-color: #2f80ed;
+        }
+
+        .show-more:hover {
+            background-color: #007bff;
+            color: #fff;
+        }*/
+
+        .comments {
+            margin-bottom: 20px;
+        }
+
+        .comment {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+            .comment .author {
+                font-weight: bold;
+                color: #3366cc;
+                margin-bottom: 5px;
+            }
+
+            .comment .date {
+                font-style: italic;
+                font-size: 12px;
+                color: #999;
+            }
+
+            .comment .content {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+        .comment {
+            padding-bottom: 20px;
+        }
+
+        .reply {
+            padding-left: 40px;
+        }
+
+        .send-button {
+            background-color: #2f80ed;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            float: right;
+        }
+
+        .loginrely {
+            color: #0026ff;
+            border: none;
+            cursor: pointer;
+            float: right;
+        }
+
+        #star-rating {
+            font-size: 1.5rem;
+        }
+
+            #star-rating i {
+                cursor: pointer;
+                color: #ccc;
+            }
+
+                #star-rating i.filled {
+                    color: #ffc107;
+                }
+
+        .comment-rating i {
+            font-size: 1.2rem;
+            color: #ffc107;
+        }
+
+            .comment-rating i.filled {
+                color: #ffd700;
+            }
+
+            .comment-rating i.empty {
+                color: #cecece;
+            }
+
+        div.frame {
+            background-color: #f3f3f3;
+            border: none;
+        }
+
+        .checkbox-container {
+            display: inline-block;
+        }
+
+            .checkbox-container form {
+                display: inline-block;
+                margin-right: 20px;
+            }
+
+                .checkbox-container form:last-child {
+                    margin-right: 0;
+                }
+
+        label.text:hover {
+            color: blue;
+        }
+
+        div.compare {
+            color: #2f80ed;
+            font-size: 16px;
+            line-height: 16px;
+            margin-left: 10px;
+        }
+
+        button.compare-button {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #333;
+            background-color: #fff;
+            color: #333;
+            border-radius: 10px;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            float: right;
+        }
+
+            button.compare-button:hover {
+                background-color: #333;
+                color: #fff;
+            }
+
+        button.delete {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #fe4c50;
+            background-color: red;
+            color: #f3f3f3;
+            border-radius: 10px;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            float: right;
+        }
+
+            button.delete:hover {
+                background-color: #fff;
+                color: red;
+            }
+
+        p.cate_name {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 21px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            height: 1.5em; /* giới hạn chiều cao */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* số dòng cần hiển thị */
+            -webkit-box-orient: vertical;
+        }
+    </style>
+}
+
+<span id="Message_create" class="d-none">@TempData["Message_create"]</span>
+
+<div class="nav">
+    <ol class="breadcrumb float-xl-left">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
+        <li class="breadcrumb-item active">@Html.DisplayFor(model => model.Brand)</li>
+    </ol>
+</div>
+
+<div class="container m-2 col-sm-12 ">
+    <div class="text-primary"><h5>@Html.DisplayFor(model => model.Category.name)</h5></div>
+    <h2>@Html.DisplayFor(model => model.Name)</h2>  
+    <div class="row">
+        <div class="col-6"><img src="~/images/@Html.DisplayFor(model => model.Image)" style="max-width: 90%;" title="@Html.DisplayFor(model => model.Name)"></div>
+        <div class="col-6">
+            <p class="special">Thông số kĩ thuật</p>
+            <p class="card-text"><a>Thương hiệu: </a><strong>@Html.DisplayFor(model => model.Brand)</strong></p>
+            <p>Giá gốc: <span class="text-danger"><strong>@Html.DisplayFor(model => model.Price)</strong></span></p>
+            <p class="card-text"><a>Số lượng: </a><strong>@Html.DisplayFor(model => model.Quantity)</strong></p>
+            <p class="card-text"><a>Views: </a><strong>@Html.DisplayFor(model => model.viewCount)</strong></p>
+            <p class="card-text"><a>Màu: </a><strong>@Html.DisplayFor(model => model.Color)</strong></p>
+            <p class="card-text"><a>Dung tích bình xăng: </a><strong>@Html.DisplayFor(model => model.Capacity)</strong></p>
+            <p class="card-text"><a>Công suất tối đa: </a><strong>@Html.DisplayFor(model => model.MaxWattage)</strong></p>
+            <p class="card-text"><a>Moment cực đại: </a><strong>@Html.DisplayFor(model => model.MaxMoment)</strong></p>
+            <p class="card-text"><a>Bảo hành: </a><strong>@Html.DisplayFor(model => model.Warranty)</strong></p>
+            <p class="card-text"><a>Kiểu: </a><strong>@Html.DisplayFor(model => model.Type)</strong></p>
+        </div>
+    </div>
+    <div>
+        <h4 class="detail">Đặc điểm</h4>
+        <p>@Html.DisplayFor(model => model.Desciption)</p>
+    </div>
+</div>
+<div><span class="tag">Tags: </span><a class="item-tag">@Html.DisplayFor(model => model.Category.name)</a></div>
+
+<hr />
+<div>
+    <a asp-action="Index" class="btn btn-outline-primary" title="Trở lại tin quảng cáo">Trở về sản phẩm</a>
+</div>
+<button class="delete" id="delete-all-ads-button" onclick="clearSelectedAds()"><i class="bi bi-x-octagon"></i> Xóa tất cả tin</button>
+<button class="compare-button" id="compare-button"><i class="bi bi-plus-circle-dotted"></i> So sánh ngay</button>
+
+<hr />
+<p class="cate_name">Xem thêm @ViewBag.NumOfAds @Html.DisplayFor(model => model.Category.name) khác</p>
+
+<div class="container border">
+    <div class="row">
+        @foreach (var item in ViewBag.sanpham)
+        {
+            <div class="col-md-3">
+                <div class="card mb-3 shadow-sm">
+                    <a asp-action="Details" asp-route-id="@item.ProductId" class="text-center"><img class="zoom" style="max-height: 200px; overflow: hidden;" src="~/images/@item.Image" title="@item.Name" /></a>
+                    <div class="card-body">
+                        <a class="text-dark" style="text-decoration:none;" asp-action="Details" asp-route-id="@item.ProductId"><h5 class="card-title text-center title">@item.Name</h5></a>
+                        <div class="product_info">
+                            <div class="product_price text-center">@item.Price.ToString("n0")</div>
+                        </div>
+                        <div class="text-warning">@item.adverageRating <i class="bi bi-star-fill"></i></div>
+                    </div>
+                    <div class="compare">
+                        <input id="ad-@item.ProductId" type="checkbox" name="selectedAds" value="@item.ProductId" />
+                        <label for="ad-@item.ProductId" class="added-to-compare">So sánh</label>
+                    </div>
+                    <div class="text-center card-footer">
+                        <a class="btn btn-outline-danger" asp-action="Details" asp-route-id="@item.ProductId"><i class="bi bi-sliders"></i>Chi tiết</a>
+                        <a class="btn btn-warning" asp-action="AddToCart" asp-route-id="@item.ProductId"><i class="bi bi-cart-check"></i>Chọn mua</a>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4 class="text-primary font-italic">Bình luận(@ViewBag.totalComments)</h4>
+        <form asp-action="CreateComment">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input name="email" type="hidden" class="form-control" />
+            <input type="hidden" name="createDate" class="form-control" />
+            <input type="hidden" name="ProductId" value="@Html.DisplayFor(model => model.ProductId)" />
+
+            <div class="form-group">
+                <textarea rows="4" cols="20" style="width: 100%;" name="mainContent" placeholder="Mời bạn bình luận hoặc đặt câu hỏi" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="StarRating">Đánh giá của bạn (1 sao là rất tệ, 5 sao là rất tốt)</label>
+                <div id="star-rating">
+                    <i class="bi bi-star" data-value="1"></i>
+                    <i class="bi bi-star" data-value="2"></i>
+                    <i class="bi bi-star" data-value="3"></i>
+                    <i class="bi bi-star" data-value="4"></i>
+                    <i class="bi bi-star" data-value="5"></i>
+                </div>
+                <input type="hidden" id="rating" name="starRating" value="0">
+            </div>
+            <div class="form-group">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <input type="submit" class="btn btn-primary" value="Gửi đánh giá ngay" title="Đăng tải bình luận">
+                }
+                else
+                {
+                    <h5 class="text-primary font-italic">Đăng nhập bình luận</h5>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="comment">
+    <div class="comment">
+        <h4 class="text-dark">Những ý kiến ​​gần đây</h4>
+        @foreach (var comment in Model.comments.OrderByDescending(s => s.commentId))
+        {
+            <div class="author">@comment.email</div>
+            //Hiển thị 1 - 5 sao
+            <div class="comment-rating">
+                @for (int i = 0; i < comment.starRating; i++)
+                {
+                    <i class="bi bi-star-fill"></i>
+                }
+                @for (int i = 0; i < 5 - comment.starRating; i++)
+                {
+                    <i class="bi bi-star empty"></i>
+                }
+            </div>
+            <div class="date">Ngày đăng: @comment.createDate</div>
+            <div class="content">@comment.mainContent</div>
+            //Hiển thị trung bình các số sao đã đánh giá
+            <div class="comment-rating">
+                <div class="text-warning">
+                    Số sao trung bình : @Model.adverageRating
+                    @for (int i = 0; i < comment.Product.adverageRating - 1; i++)
+                    {
+                        <i class="bi bi-star-fill"></i>
+                    }
+                </div>
+            </div>
+            <hr />
+            <h5>Viết phản hồi</h5>
+            <form method="post" asp-action="AddReply">
+                <input name="commentId" type="hidden" value="@comment.commentId" />
+                <textarea rows="2" cols="20" name="mainContent" style="width:800px;" placeholder="Mời bạn chia sẻ cảm nhận..." required></textarea>
+                @if (SignInManager.IsSignedIn(User))
+                {
+
+                    <button type="submit" class="send-button"><i class="bi bi-reply lg"></i>Trả lời</button>
+                }
+                else
+                {
+                    <p class="loginrely">Đăng nhập phản hồi</p>
+                }
+            </form>
+            @if (comment.Replies.Count > 0)
+            {
+                <div class="reply">
+                    @foreach (var reply in comment.Replies)
+                    {
+                        <div class="author">@reply.email</div>
+                        <div class="date">Ngày đăng: @reply.createDate</div>
+                        <div class="content">@reply.mainContent</div>
+                        <hr />
+                    }
+                </div>
+                <hr />
+            }
+        }
+    </div>
+</div>
+<hr />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>            
+        //So sánh tin quảng cáo bằng javascript
+        var selectedAds = [];
+
+        $('input[type=checkbox][name=selectedAds]').change(function () {
+            //Id quảng cáo tương ứng sẽ được thêm vào mảng `selectedAds` thông qua phương thức `push()`
+            if (this.checked) {
+                selectedAds.push(parseInt(this.value));
+            } else {
+                //Id của quảng cáo tương ứng sẽ được xóa khỏi mảng `selectedAds` thông qua phương thức `splice()`
+                //Phương thức `indexOf()` được sử dụng để tìm kiếm vị trí của id quảng cáo đó trong mảng `selectedAds`
+                selectedAds.splice(selectedAds.indexOf(parseInt(this.value)), 1);
+            }
+        });
+
+        $('#compare-button').click(function () {
+            //Nếu số lượng này lớn hơn hoặc bằng 4(vì có tối đa 3 quảng cáo được chọn để so sánh)
+            if (selectedAds.length >= 4) {
+                alert("Cho phép so sánh tối đa 3 sản phẩm!");
+                return;
+            }
+            //hàm sẽ sử dụng thuộc tính `window.location.href`để chuyển hướng trang web đến địa chỉ
+            //được chỉ định(`'/Home/Compare?ids='` + `selectedAds.join(',')`).
+            //id quảng cáo trong mảng`selectedAds` nối thành một chuỗi duy nhất qua phương thức`join()` với dấu phẩy làm phân cách.
+            if (selectedAds.length > 0 && selectedAds.length >= 2) {
+                window.location.href = '/Home/Compare?ids=' + selectedAds.join(',');
+            } else {
+                alert("Vui lòng chọn ít nhất 2 sản phẩm để so sánh!");
+            }
+
+        });
+        //Thay đổi textcheckbox
+        // Lấy tất cả các checkbox và label trong danh sách quảng cáo
+        var checkboxes = document.querySelectorAll('input[name="selectedAds"]');
+        var labels = document.querySelectorAll('label[for^="ad-"]');
+
+        // Lắng nghe sự kiện "change" của các checkbox
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function (event) {
+                // Lấy label tương ứng của checkbox
+                var label = document.querySelector('label[for="' + event.target.id + '"]');
+
+                // Nếu checkbox được chọn, đổi nội dung của label thành "Đã thêm so sánh"
+                if (event.target.checked) {
+                    label.textContent = 'Đã thêm so sánh';
+                }
+                // Ngược lại, đổi nội dung của label thành "So sánh"
+                else {
+                    label.textContent = 'So sánh';
+                }
+            });
+        });
+        //Xóa tất cả các checkbox
+        //Khi click vào sẽ kiểm tra xem các checkbox được chọn xác định bởi một thuộc tính "selectedAds" hay chưa.
+        //bất kỳ checkbox nào đã được chọn, thì được xoá bỏ bằng phương thức `prop()`đặt thuộc tính "checked"thành `false`
+        $("#delete-all-ads-button").click(function () {
+            var selectedAds = $("input[name='selectedAds']");
+            if (selectedAds.filter(":checked").length > 0) {
+                selectedAds.prop('checked', false);
+                //Cập nhật lable so sánh và thông báo "Đã xóa các check thành công!".
+                $('label.added-to-compare').text('So sánh');
+                alert("Đã xóa các check thành công!");
+            } else {
+                alert("Vui lòng chọn ít nhất một sản phẩm để xóa!");
+            }
+        });
+        //hàm `clearSelectedAds()`, nếu `selectedAds` là một mảng, thì phương thức `splice()`
+        //sử dụng để loại bỏ tất cả các phần tử khỏi`selectedAds` bằng cách đặt độ dài của nó thành 0.
+        function clearSelectedAds() {
+            selectedAds.splice(0, selectedAds.length);
+        }
+       
+
+        $(document).ready(function () {
+            var message = $('#Message_create').text();
+            if (message !== '') {
+                toastr.success(message);
+            }
+
+        });
+        
+
+        const stars = document.querySelectorAll('#star-rating i');
+        stars.forEach(function (star) {
+            star.addEventListener('click', function () {
+                const value = this.getAttribute('data-value');
+
+                // cập nhật giá trị số sao được chọn
+                document.getElementById('rating').value = value;
+
+                // đánh dấu các hình sao được chọn
+                stars.forEach(function (s) {
+                    s.classList.remove('filled');
+                });
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add('filled');
+                }
+            });
+        });
+        //Lỗi chỗ này nha
+        //document.querySelectorAll('.post').forEach(post => {
+        //    const showMoreBtn = post.querySelector('.show-more');
+        //    const postContent = post.querySelector('.post-content');
+
+        //    showMoreBtn.addEventListener('click', () => {
+        //        post.classList.toggle('show-all');
+        //        if (post.classList.contains('show-all')) {
+        //            showMoreBtn.innerText = 'Thu gọn';
+        //        } else {
+        //            showMoreBtn.innerText = 'Xem thêm';
+        //        }
+        //    });
+        //});
+    </script>
+}
+

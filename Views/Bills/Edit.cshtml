@@ -1,0 +1,81 @@
+﻿@model websitebanxemay.Models.Bill
+
+@{
+    ViewData["Title"] = "Cập nhật hóa đơn";
+}
+
+<div class="nav">
+    <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
+    </ol>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BillId" />
+            <div class="row">
+                <div class="col-4">
+                    <label asp-for="CustomerName" class="control-label"></label>
+                    <input asp-for="CustomerName" class="form-control" />
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div>
+                <div class="col-4">
+                    <label asp-for="Date" class="control-label"></label>
+                    <input asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="col-4">
+                    <label asp-for="BillTotal" class="control-label"></label>
+                    <input asp-for="BillTotal" class="form-control" />
+                    <span asp-validation-for="BillTotal" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-3">
+                    <label asp-for="BillStatus" class="control-label"></label>
+                    <br />
+                    <select asp-for="BillStatus">
+                        <option value="Chưa thanh toán">Chưa thanh toán</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                    </select>
+                    <span asp-validation-for="OrderStatus" class="text-danger"></span>
+                </div>
+                <div class="col-3">
+                    <label asp-for="OrderStatus" class="control-label"></label>
+                    <br />
+                    <select asp-for="OrderStatus">
+                        <option value="Mới">Mới</option>
+                        <option value="Đang giao">Đang giao</option>
+                        <option value="Đã giao">Đã giao</option>
+                    </select>
+                    <span asp-validation-for="OrderStatus" class="text-danger"></span>
+                </div>
+                <div class="col-6">
+                    <label asp-for="CustomerPhone" class="control-label"></label>
+                    <input asp-for="CustomerPhone" class="form-control" />
+                    <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerAddress" class="control-label"></label>             
+                <textarea rows="3" asp-for="CustomerAddress" class="form-control"></textarea>
+                <span asp-validation-for="CustomerAddress" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class= "btn btn-info"><i class="bi bi-skip-backward"></i>Quay lại danh sách</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

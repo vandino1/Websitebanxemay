@@ -1,0 +1,109 @@
+﻿@model List<websitebanxemay.Models.CartItem>
+@{
+    decimal total = 0; // tổng tiền
+    int num = 1; //số thứ tự
+                 //int total = 0; // tổng tiền
+    <style>
+        .hidden-select {
+            display: none;
+        }
+    </style>
+}
+
+<h3 class="text-secondary">Vui lòng kiểm tra lại đơn hàng và nhập đầy đủ thông tin</h3>
+<div class="row">
+    <div class="col">
+        <h4 class="text-danger">Thông tin đơn hàng</h4>
+        <table class="table table-bordered">
+            <tr class="bg-info text-center">
+                <th>STT</th>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+            @foreach (var cartitem in Model)
+            {
+                var amount = cartitem.Quantity * cartitem.Product.Price;//Thành tiền
+                total += amount;
+                <tr>
+                    <td>@(num++)</td>
+                    <td>
+                        <img src="~/images/@cartitem.Product.Image" class="img-thumbnail" width="30" />
+                        @cartitem.Product.Name
+                    </td>
+                    <td>@(cartitem.Product.Price.ToString("n0"))</td>
+                    <td>
+                        @(cartitem.Quantity)
+                    </td>
+                    <td>@(amount.ToString("n0"))</td>
+
+                </tr>
+            }
+            <tr>
+                <td colspan="4" class="text-end">Tổng tiền</td>
+                <td colspan="1"><strong class="text-danger">@(total.ToString("n0"))</strong></td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="col">
+        <h4 class="text-dark">Thông tin khách hàng</h4>
+        <form asp-action="CreateBill" id="myForm">
+
+            <input type="hidden" name="billTotal" value="@total" />
+            <div class="mb-3">
+                <label>Họ tên (*)</label>
+                <input name="cusName" class="form-control" type="text" required />
+            </div>
+            <div class="mb-3">
+                <label>Điện thoại</label>
+                <input name="cusPhone" class="form-control" type="tel" required placeholder="Số điện thoại" />
+            </div>
+            <div class="mb-3">
+                <label>Địa chỉ</label>
+                <textarea rows="3" name="cusAddress" class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+                <select name="BillStatus" class="hidden-select">
+                    <option value="Chưa thanh toán" selected>Chưa thanh toán</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <select name="OrderStatus" class="hidden-select">
+                    <option value="Mới" selected>Mới</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check-square-fill"></i> Đặt hàng</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#myForm").validate({
+            rules: {
+                cusPhone: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10,
+                    digits: true
+                }
+            },
+            messages: {
+                cusPhone: {
+                    required: "Vui lòng nhập số điện thoại",
+                    minlength: "Số điện thoại phải có ít nhất 10 chữ số",
+                    maxlength: "Số điện thoại không được quá 10 chữ số",
+                    digits: "Số điện thoại phải là số"
+                }
+            }
+        });
+    </script>
+}
+

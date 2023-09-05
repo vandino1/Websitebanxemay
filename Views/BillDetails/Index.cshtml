@@ -1,0 +1,129 @@
+﻿@model IEnumerable<websitebanxemay.Models.BillDetail>
+
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+}
+
+<div class="col-12">
+    <ol class="breadcrumb float-xl-right">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+        <li class="breadcrumb-item active">@ViewBag.Title</li>
+    </ol>
+</div>
+<form asp-controller="BillDetails" asp-action="Index" method="get">
+    <p>
+        Nhập nội dung: <input type="text" name="SearchString" placeholder="Tên sản phẩm, tên khách..." value="@ViewData["CurrentFilter"]" style="width:300px" />
+        <button class="btn btn-primary text-light" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+</form>
+
+<form asp-controller="BillDetails" asp-action="DeleteMultiple" method="post">
+    @*<button type="submit" class="btn btn-danger"><i class="bi bi-x-octagon"></i> Xóa tất cả</button> |*@
+    <a href="@Url.Action("ExportToExcel")" class="btn btn-success"><i class="bi bi-file-excel"></i> Xuất Excel</a>
+    <hr />
+    <table class="table table-bordered table-hover text-center">
+        <thead>
+            <tr class="bg-info">
+                <th><input type="checkbox" id="checkAll" /></th>
+                <th>STT</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Bill.CustomerAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>Sửa</th>
+                <th>Chi tiết</th>
+                @*<th>Xóa</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count() > 0)
+            {
+                int i = 1;
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><input class="checkbox" type="checkbox" name="selectedIds" value="@item.BillDetailId" /></td>
+                        <td>@i</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bill.CustomerAddress)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td class="col-auto">
+                            <a asp-action="Edit" asp-route-id="@item.BillDetailId" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td class="col-auto">
+                            <a asp-action="Details" asp-route-id="@item.BillDetailId" class="btn btn-info btn-sm"><i class="bi bi-sliders"></i></a>
+                        </td>
+                        @*<td class="col-auto">
+                            <a asp-action="Delete" asp-route-id="@item.BillDetailId" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+                        </td>*@
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</form>
+
+<div class="product-count">
+    <p>Tổng số bản ghi: @Model.Count()</p>
+</div>
+<div class="d-flex w-100 justify-content-end">
+    <Pagination page-count="@ViewBag.TotalPages" page-target="/BillDetails" page-number="@ViewBag.PageNumber" page-range="@ViewBag.PageRange"></Pagination>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var message = $('#Message_delete').text();
+            if (message !== '') {
+                toastr.warning(message);
+            }
+
+        });
+        $(document).ready(function () {
+            var message = $('#Message_error').text();
+            if (message !== '') {
+                toastr.error(message);
+            }
+
+        });
+        $(document).ready(function () {
+            var message = $('#Message_edit').text();
+            if (message !== '') {
+                toastr.info(message);
+            }
+
+        });
+
+        $(document).ready(function () {
+            $('#checkAll').click(function () {
+                $('.checkbox').prop('checked', $(this).prop('checked'));
+            });
+        });
+
+    </script>
+
+}
+

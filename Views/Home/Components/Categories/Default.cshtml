@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Danh mục sản phẩm";
+    <style>
+        span.cate {
+            color: #fff;
+            padding: 5px;
+            text-align: center;
+            font-family: 'Segoe UI';
+            font-size: 18px;           
+        }
+         li.color {
+            background-color: #ff0000;
+        }
+        li.name:hover {
+            background-color: #ff0000;
+            color: #ffffff;
+        }
+    </style>
+
+}
+
+<ul class="list-group">
+
+    <li class="list-group-item color">
+        <strong><a class="navbar-expand-lg "><span class="cate"><i class="bi bi-list-task"></i> Danh Mục</span></a></strong>
+    </li>
+</ul>
+
+@foreach (var item in Model)
+{
+    <li class="list-group-item name">
+        <a class="nav-link " asp-controller="Home" asp-action="AdvertisementsByCategory" asp-route-categorySlug="@item.slug"><span><i class="bi bi-chevron-compact-right"></i>@item.name</span></a>
+    </li>
+
+}

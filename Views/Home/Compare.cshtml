@@ -1,0 +1,120 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "So sánh sản phẩm";
+    <style>
+        td img {
+            width: 95%;
+            height: 200px;
+            object-fit: contain;
+        }
+    </style>
+}
+
+<h1 class="display-5 my-4 text-center">So sánh sản phẩm</h1>
+<div class="container">
+    <div class="col-md-12 mx-auto">
+        <table class="table bg-light">
+            <tr>
+                <th>Hình ảnh</th>
+                @foreach (var ad in Model)
+                {
+                    <td>
+                        <img src="~/images/@Html.DisplayFor(modelItem => ad.Image)" />
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Tên sản phẩm</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Name</td>
+                }
+            </tr>
+            <tr>
+                <th>Giá</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Price.ToString("n0") đ</td>
+                }
+            </tr>
+            <tr>
+                <th>Số lượng</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Quantity</td>
+                }
+            </tr>
+            <tr>
+                <th>Lượt xem</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.viewCount</td>
+                }
+            </tr>
+            <tr>
+                <th>Rating</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.adverageRating <i class="bi bi-star-fill"></i></td>
+                }
+            </tr>
+            <tr>
+                <th>Màu</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Color</td>
+                }
+            </tr>
+            <tr>
+                <th>Thương hiệu</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Brand</td>
+                }
+            </tr>
+            <tr>
+                <th>Danh mục</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Category.name</td>
+                }
+            </tr>
+            <tr>
+                <th>Dung tích bình</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Capacity</td>
+                }
+            </tr>
+            <tr>
+                <th>Công suất max</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.MaxWattage</td>
+                }
+            </tr>
+            <tr>
+                <th>Moment max</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.MaxMoment</td>
+                }
+            </tr>
+            <tr>
+                <th>Bảo hành</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Warranty</td>
+                }
+            </tr>
+            <tr>
+                <th>Kiểu sản phẩm</th>
+                @foreach (var ad in Model)
+                {
+                    <td>@ad.Type</td>
+                }
+            </tr>
+        </table>
+    </div>
+</div>
